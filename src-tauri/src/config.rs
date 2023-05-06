@@ -38,7 +38,7 @@ pub fn get_config() -> MatchaSettings {
 pub fn get_config_directory() -> PathBuf {
 	match home_dir() {
 		Some(home) => {
-			let dir = Path::new(&home).join(".matcha");
+			let dir = Path::new(&home).join(".config").join("matcha");
 			fs::create_dir_all(&dir).unwrap_or(());
 			return dir;
 		}
