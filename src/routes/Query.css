@@ -1,0 +1,31 @@
+@import url("../variables.css");
+
+#query-page {
+	width: 100vw;
+	height: 100vh;
+
+	display: grid;
+	grid-template-rows: var(--query-input-height) auto var(--bottom-bar-height);
+
+	background-color: var(--background-secondary);
+}
+
+#query-input {
+	font-size: var(--query-input-font-size);
+	text-align: center;
+	border: none;
+	background-color: var(--background-primary);
+	border-bottom: var(--border-size) solid var(--background-tertiary);
+}
+
+#plugin-panel {
+	border: none;
+	width: 100%;
+	height: 100%;
+}
+
+#bottom-bar {
+	background-color: var(--background-primary);
+	border-top: var(--border-size) solid var(--background-tertiary);
+	padding: 8px;
+}

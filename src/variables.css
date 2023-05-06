@@ -1,0 +1,11 @@
+:root {
+	--query-input-height: 64px;
+	--query-input-font-size: 24px;
+
+	--border-size: 2px;
+
+	--bottom-bar-padding: 8px;
+	--bottom-bar-height: calc(
+		24px + var(--border-size) + (var(--bottom-bar-padding) * 2)
+	);
+}

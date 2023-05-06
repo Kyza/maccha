@@ -1,0 +1,23 @@
+body,
+input {
+	color: var(--text-color);
+	background-color: var(--background-primary);
+}
+a {
+	color: var(--text-color);
+}
+
+:root {
+	--text-color: oklch(95% 0.02 170);
+	--background-primary: oklch(25% 0.005 170);
+	--background-secondary: oklch(20% 0.005 170);
+	--background-tertiary: oklch(15% 0.005 170);
+}
+@media (prefers-color-scheme: light) {
+	:root {
+		--text-color: oklch(15% 0.005 170);
+		--background-primary: oklch(95% 0.02 170);
+		--background-secondary: oklch(90% 0.02 170);
+		--background-tertiary: oklch(85% 0.02 170);
+	}
+}
