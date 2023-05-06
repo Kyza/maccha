@@ -44,7 +44,7 @@ A list of things I want to do.
 	- [x] Theme manager.
 	- [x] Theme loader.
 - [ ] Improved keyboard navigation.
-- [ ] Refresh plugins/themes button.
+- [x] Refresh plugins/themes button.
 - [ ] Maccha settings page.
 - [x] Automatically create config file.
 - [ ] Window vibrancy.
