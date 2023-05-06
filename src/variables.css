@@ -1,5 +1,5 @@
 :root {
-	--query-input-height: 64px;
+	--query-input-height: calc(64px + var(--border-size));
 	--query-input-font-size: 24px;
 
 	--border-size: 2px;

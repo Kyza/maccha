@@ -1,12 +1,15 @@
 use std::{
 	collections::HashMap,
-	ffi::{c_char, c_double, c_uint, CStr},
+	ffi::{c_char, c_double},
 	path::PathBuf,
 };
 
 use libloading::{Library, Symbol};
 
-use crate::utils::{ptr_to_string, str_to_ptr};
+use crate::{
+	config::resolve_plugin_file,
+	utils::{ptr_to_string, str_to_ptr},
+};
 
 pub struct Plugin {
 	pub library: Library,
@@ -18,7 +21,7 @@ pub struct Plugin {
 impl Plugin {
 	/// Creates a new plugin instance wrapper around a dynamic library.
 	pub unsafe fn new(library_path: PathBuf) -> Plugin {
-		let library = Library::new(library_path).unwrap();
+		let library = Plugin::load(library_path);
 
 		let id: Symbol<*const &str> = library.get(b"id").unwrap();
 		let id = (**id).to_string();
@@ -29,10 +32,14 @@ impl Plugin {
 		Plugin { library, id, name }
 	}
 
+	pub unsafe fn load(library_path: PathBuf) -> Library {
+		Library::new(resolve_plugin_file(library_path)).unwrap()
+	}
+
 	/// A function that loads a library, grabs the ID from it, and unloads it.
 	/// For a bit of extra speed instead of using `Plugin::new` and grabbing more data than needed.
 	pub unsafe fn get_id(library_path: PathBuf) -> String {
-		let library = Library::new(library_path).unwrap();
+		let library = Plugin::load(library_path);
 
 		let id: Symbol<*const &str> = library.get(b"id").unwrap();
 		(**id).to_string()
@@ -86,5 +93,9 @@ impl PluginManager {
 
 	pub fn unload(&mut self, id: String) {
 		self.plugins.remove(&id);
+	}
+
+	pub fn unload_all(&mut self) {
+		self.plugins.clear();
 	}
 }
