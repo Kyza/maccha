@@ -7,12 +7,15 @@
 		"withGlobalTauri": false
 	},
 	"package": {
-		"productName": "matcha",
+		"productName": "maccha",
 		"version": "0.0.0"
 	},
 	"tauri": {
 		"allowlist": {
-			"all": true
+			"all": true,
+			"http": {
+				"scope": ["https://**", "http://localhost*/**"]
+			}
 		},
 		"bundle": {
 			"active": true,
@@ -23,7 +26,7 @@
 				"icons/icon.icns",
 				"icons/icon.ico"
 			],
-			"identifier": "net.kyza.matcha",
+			"identifier": "net.kyza.maccha",
 			"targets": "all"
 		},
 		"security": {
@@ -43,7 +46,7 @@
 				"center": true,
 				"alwaysOnTop": true,
 				"visible": true,
-				"title": "Matcha",
+				"title": "Maccha",
 				"width": 800,
 				"height": 600
 			}

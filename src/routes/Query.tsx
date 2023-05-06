@@ -15,7 +15,7 @@ import "./Query.css";
 import pluginsStore, { Plugin, updatePriorities } from "../stores/plugins";
 
 const [query, setQuery] = createSignal("");
-window.addEventListener("matcha-set-query", (event: CustomEventInit) => {
+window.addEventListener("maccha-set-query", (event: CustomEventInit) => {
 	setQuery(event.detail.toString());
 });
 
@@ -24,7 +24,7 @@ function Query() {
 
 	createEffect(async () => {
 		await updatePriorities(query());
-		window.dispatchEvent(new CustomEvent("matcha-query", { detail: query() }));
+		window.dispatchEvent(new CustomEvent("maccha-query", { detail: query() }));
 	});
 
 	const currentPlugin = () =>
@@ -61,7 +61,7 @@ function Query() {
 				onKeyUp={(event) => {
 					if (event.key) {
 						if (event.key.toLowerCase() === "enter") {
-							window.dispatchEvent(new CustomEvent("matcha-submit", { detail: query() }));
+							window.dispatchEvent(new CustomEvent("maccha-submit", { detail: query() }));
 						} else if (event.key.toLowerCase() === "escape") {
 							setQuery("");
 						}
@@ -122,7 +122,7 @@ const PluginPanel: Component<{
 						).default;
 						cleanup = cp({ root: el });
 						window.dispatchEvent(
-							new CustomEvent("matcha-query", { detail: untrack(() => props.query) })
+							new CustomEvent("maccha-query", { detail: untrack(() => props.query) })
 						);
 					}}
 				/>

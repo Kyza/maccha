@@ -10,7 +10,7 @@ import { useNavigate } from "@solidjs/router";
 function Home() {
 	useNavigate()("/query");
 
-	return <>Matcha is initializing...</>;
+	return <>Maccha is initializing...</>;
 }
 
 export default Home;

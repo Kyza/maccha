@@ -126,5 +126,5 @@ fn main() {
 			get_plugin_priority
 		])
 		.run(tauri::generate_context!())
-		.expect("Error while running Matcha");
+		.expect("Error while running Maccha");
 }

@@ -1,6 +1,6 @@
-# Matcha
+# Maccha
 
-Matcha is an extremely extensible and themable power menu for Windows, macOS, and Linux.
+Maccha is an extremely extensible and themable power menu for Windows, macOS, and Linux.
 
 ## Plugins
 
@@ -45,7 +45,7 @@ A list of things I want to do.
 	- [x] Theme loader.
 - [ ] Improved keyboard navigation.
 - [ ] Refresh plugins/themes button.
-- [ ] Matcha settings page.
+- [ ] Maccha settings page.
 - [x] Automatically create config file.
 - [ ] Window vibrancy.
 	- [ ] Settings.
