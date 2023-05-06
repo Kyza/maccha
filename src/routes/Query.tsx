@@ -15,6 +15,9 @@ import "./Query.css";
 import pluginsStore, { Plugin, updatePriorities } from "../stores/plugins";
 
 const [query, setQuery] = createSignal("");
+window.addEventListener("matcha-set-query", (event: CustomEventInit) => {
+	setQuery(event.detail.toString());
+});
 
 function Query() {
 	const params = useParams<{ pluginID?: string }>();
@@ -58,8 +61,7 @@ function Query() {
 				onKeyUp={(event) => {
 					if (event.key) {
 						if (event.key.toLowerCase() === "enter") {
-							window.dispatchEvent(new CustomEvent("matcha-submit"));
-							setQuery("");
+							window.dispatchEvent(new CustomEvent("matcha-submit", { detail: query() }));
 						} else if (event.key.toLowerCase() === "escape") {
 							setQuery("");
 						}
