@@ -35,6 +35,8 @@ jobs:
           workspaces: './src-tauri -> target'
 
       - uses: pnpm/action-setup@v2
+        with:
+          version: 8.4.0
 
       - name: Sync node version and setup cache
         uses: actions/setup-node@v3
