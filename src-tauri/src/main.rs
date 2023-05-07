@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{path::Path, sync::Mutex};
+use std::{path::Path, process, sync::Mutex};
 
 use base64::{engine::general_purpose, Engine as _};
 
@@ -9,7 +9,9 @@ use once_cell::sync::Lazy;
 
 use config::get_config;
 use plugins::PluginManager;
-use tauri::Manager;
+use tauri::{
+	CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu,
+};
 use themes::ThemeManager;
 use utils::{ptr_to_string, str_to_ptr};
 
@@ -44,7 +46,7 @@ fn run_plugin_function(id: &str, name: &str, data: String) -> String {
 #[tauri::command]
 fn get_storage_directory(storage_name: String) -> String {
 	config::get_storage_directory()
-		.join(&storage_name)
+		.join(storage_name)
 		.to_string_lossy()
 		.to_string()
 }
@@ -63,13 +65,32 @@ struct Payload {
 }
 
 fn main() {
+	let quit = CustomMenuItem::new("quit".to_string(), "Quit");
+	let tray_menu = SystemTrayMenu::new().add_item(quit);
 	tauri::Builder::default()
 		.plugin(tauri_plugin_store::Builder::default().build())
 		.plugin(tauri_plugin_window_state::Builder::default().build())
 		.plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
-			app.get_window("main").expect("Failed to find the main window").show().expect("Failed to show the main window");
+			let window = app.get_window("main").expect("Failed to find the main window");
+			window.show().expect("Failed to show the main window");
+			window.set_focus().expect("Failed to focus the main window");
+
 			app.emit_all("single-instance", Payload { args: argv, cwd }).unwrap();
 		}))
+		.system_tray(SystemTray::new().with_menu(tray_menu))
+		.on_system_tray_event(|app, event| match event {
+			SystemTrayEvent::LeftClick { .. } => {
+				let window = app.get_window("main").expect("Failed to find the main window");
+				window.show().expect("Failed to show the main window");
+			window.set_focus().expect("Failed to focus the main window");
+			}
+			SystemTrayEvent::MenuItemClick { id, .. } => {
+				if id.as_str() == "quit" {
+					process::exit(0);
+				}
+			}
+			_ => {}
+		})
 		.on_page_load(|window, _page_load_payload| {
 			PLUGIN_MANAGER.lock().unwrap().unload_all();
 			THEME_MANAGER.lock().unwrap().unload_all();

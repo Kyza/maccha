@@ -1,14 +1,6 @@
-use std::{
-	collections::HashMap,
-	fs,
-	path::PathBuf,
-};
+use std::{collections::HashMap, fs, path::PathBuf};
 
-
-
-use crate::{
-	config::{resolve_theme_file},
-};
+use crate::config::resolve_theme_file;
 
 pub struct Theme {
 	pub id: String,
