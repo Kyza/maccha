@@ -23,11 +23,13 @@ impl Plugin {
 	pub unsafe fn new(library_path: PathBuf) -> Plugin {
 		let library = Plugin::load(library_path);
 
-		let id: Symbol<*const &str> = library.get(b"id").unwrap();
-		let id = (**id).to_string();
+		let id: Symbol<unsafe extern "C" fn() -> *const c_char> =
+			library.get(b"id").unwrap();
+		let id = ptr_to_string(id());
 
-		let name: Symbol<*const &str> = library.get(b"name").unwrap();
-		let name = (**name).to_string();
+		let name: Symbol<unsafe extern "C" fn() -> *const c_char> =
+			library.get(b"name").unwrap();
+		let name = ptr_to_string(name());
 
 		Plugin { library, id, name }
 	}
@@ -41,8 +43,9 @@ impl Plugin {
 	pub unsafe fn get_id(library_path: PathBuf) -> String {
 		let library = Plugin::load(library_path);
 
-		let id: Symbol<*const &str> = library.get(b"id").unwrap();
-		(**id).to_string()
+		let id: Symbol<unsafe extern "C" fn() -> *const c_char> =
+			library.get(b"id").unwrap();
+		ptr_to_string(id())
 	}
 
 	/// Grabs an arbitrary function from the library that accepts a string and returns a string.

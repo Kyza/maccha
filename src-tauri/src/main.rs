@@ -44,8 +44,9 @@ fn run_plugin_function(id: &str, name: &str, data: String) -> String {
 }
 
 #[tauri::command]
-fn get_storage_directory() -> String {
+fn get_storage_directory(storage_name: String) -> String {
 	config::get_storage_directory()
+		.join(&storage_name)
 		.to_string_lossy()
 		.to_string()
 }
