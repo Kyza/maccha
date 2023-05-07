@@ -10,8 +10,8 @@ use base64::{engine::general_purpose, Engine as _};
 use once_cell::sync::Lazy;
 
 use config::get_config;
-use phf::phf_map;
 use plugins::PluginManager;
+use tauri::Manager;
 use themes::ThemeManager;
 use utils::{ptr_to_string, str_to_ptr};
 
@@ -44,14 +44,33 @@ fn run_plugin_function(id: &str, name: &str, data: String) -> String {
 }
 
 #[tauri::command]
+fn get_storage_directory() -> String {
+	config::get_storage_directory()
+		.to_string_lossy()
+		.to_string()
+}
+
+#[tauri::command]
 fn get_plugin_priority(id: &str, data: String) -> f64 {
 	let plugin_manager = PLUGIN_MANAGER.lock().unwrap();
 
 	unsafe { plugin_manager.plugins.get(id).unwrap().get_priority(&data) }
 }
 
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+	args: Vec<String>,
+	cwd: String,
+}
+
 fn main() {
 	tauri::Builder::default()
+		.plugin(tauri_plugin_store::Builder::default().build())
+		.plugin(tauri_plugin_window_state::Builder::default().build())
+		.plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
+			app.get_window("main").expect("Failed to find the main window").show().expect("Failed to show the main window");
+			app.emit_all("single-instance", Payload { args: argv, cwd }).unwrap();
+		}))
 		.on_page_load(|window, _page_load_payload| {
 			PLUGIN_MANAGER.lock().unwrap().unload_all();
 			THEME_MANAGER.lock().unwrap().unload_all();
@@ -119,7 +138,8 @@ fn main() {
 		.invoke_handler(tauri::generate_handler![
 			is_production,
 			run_plugin_function,
-			get_plugin_priority
+			get_plugin_priority,
+			get_storage_directory
 		])
 		.run(tauri::generate_context!())
 		.expect("Error while running Maccha");

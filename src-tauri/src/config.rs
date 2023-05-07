@@ -62,6 +62,10 @@ pub fn get_themes_directory() -> PathBuf {
 	get_config_directory().join("themes")
 }
 
+pub fn get_storage_directory() -> PathBuf {
+	get_config_directory().join("storage")
+}
+
 pub fn resolve_plugin_file(path: PathBuf) -> PathBuf {
 	if path.is_relative() {
 		get_plugins_directory().join(path)

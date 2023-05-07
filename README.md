@@ -39,6 +39,7 @@ A list of things I want to do.
 	- [x] Query state reactivity APIs.
 	- [ ] Fix plugin panel switching.
 	- [ ] Quick plugin installer.
+	- [x] Plugin settings API.
 	- [ ] Plugin settings pages.
 	- [ ] Rust plugin utility crate.
 	- [ ] Better plugin error handling.
