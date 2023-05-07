@@ -1,7 +1,5 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-#![feature(let_chains)]
-#![feature(box_into_inner)]
 
 use std::{path::Path, sync::Mutex};
 
