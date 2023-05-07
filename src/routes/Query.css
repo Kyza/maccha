@@ -18,6 +18,10 @@
 	border-bottom: var(--border-size) solid var(--background-tertiary);
 }
 
+#awaiting-query-message {
+	text-align: center;
+}
+
 #plugin-panel {
 	border: none;
 	width: 100%;
@@ -28,4 +32,10 @@
 	background-color: var(--background-primary);
 	border-top: var(--border-size) solid var(--background-tertiary);
 	padding: 8px;
+}
+
+#plugin-tabs {
+	.active {
+		font-weight: bolder;
+	}
 }

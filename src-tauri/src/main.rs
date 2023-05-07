@@ -22,11 +22,7 @@ pub mod utils;
 
 #[tauri::command]
 fn is_production() -> bool {
-	if cfg!(dev) {
-		false
-	} else {
-		true
-	}
+	!cfg!(dev)
 }
 
 static PLUGIN_MANAGER: Lazy<Mutex<PluginManager>> =

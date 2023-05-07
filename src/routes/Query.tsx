@@ -1,4 +1,4 @@
-import { Link as A, useParams } from "@solidjs/router";
+import { Link as A } from "@solidjs/router";
 import {
 	Component,
 	For,
@@ -20,15 +20,23 @@ window.addEventListener("maccha-set-query", (event: CustomEventInit) => {
 });
 
 function Query() {
-	const params = useParams<{ pluginID?: string }>();
+	const [selectedPluginID, setSelectedPluginID] = createSignal<string | void>();
 
 	createEffect(async () => {
 		await updatePriorities(query());
+		// Set the selected plugin automatically if there were just no available ones.
+		if (!selectedPluginID() && availablePlugins().length > 0) {
+			setSelectedPluginID(availablePlugins()[0].id);
+		}
+		// If there are no available plugins then nothing should be selected.
+		else if (availablePlugins().length === 0) {
+			setSelectedPluginID(undefined);
+		}
 		window.dispatchEvent(new CustomEvent("maccha-query", { detail: query() }));
 	});
 
-	const currentPlugin = () =>
-		pluginsStore.value.find((plugin) => plugin.id === params?.pluginID);
+	const currentPluginInstance = () =>
+		pluginsStore.value.find((plugin) => plugin.id === selectedPluginID());
 
 	const availablePlugins = () =>
 		pluginsStore.value.filter((plugin) => plugin.priority > 0);
@@ -69,24 +77,31 @@ function Query() {
 				}}
 			/>
 			<div id="content">
-				<Show when={pluginsStore.value[0]?.priority === 0}>
-					<div style={{ "text-align": "center" }}>
-						<p>Install some plugins to get functionality!</p>
-						<p>If you have, start typing to use them!</p>
-					</div>
+				<Show when={pluginsStore.value.length === 0}>
+					<p id="awaiting-query-message">Install some plugins to get functionality!</p>
 				</Show>
-				<Show when={availablePlugins().length > 0}>
-					<div>
+				<Show when={availablePlugins().length === 0 || !selectedPluginID()}>
+					<p id="awaiting-query-message">Start typing to query your plugins!</p>
+				</Show>
+				<Show when={availablePlugins().length > 0 && selectedPluginID()}>
+					<div id="plugin-tabs">
 						<For each={availablePlugins()}>
-							{(plugin) => <A href={`/query/${plugin.id}`}>{plugin.name}</A>}
+							{(plugin) => (
+								<a
+									class="plugin-tab"
+									classList={{
+										active: selectedPluginID() === plugin.id,
+									}}
+									onClick={() => {
+										setSelectedPluginID(plugin.id);
+									}}
+								>
+									{plugin.name}
+								</a>
+							)}
 						</For>
 					</div>
-					<Show when={params?.pluginID}>
-						<PluginPanel query={query()} plugin={currentPlugin()!} />
-					</Show>
-					<Show when={!params?.pluginID && pluginsStore.value[0]?.priority > 0}>
-						<PluginPanel query={query()} plugin={pluginsStore.value[0]} />
-					</Show>
+					<PluginPanel query={query()} plugin={currentPluginInstance()!} />
 				</Show>
 			</div>
 			<div id="bottom-bar">

@@ -1,12 +1,14 @@
 # Maccha
 
+I hate coffee.
+
 Maccha is an extremely extensible and themable power menu for Windows, macOS, and Linux.
 
 ## Plugins
 
 Plugins are written in Rust (other languages may work but are untested) and TypeScript/JavaScript. They're compiled to dynamic libraries (`.dll` and `.so` depending on the system) for distribution.
 
-The JS side of plugins is used for creating the UI. They can call native (Rust) functions they provide, or any Tauri API to do perform native or heavy operations.
+The JS side of plugins is used for creating the UI. They can call native (Rust) functions they provide, or any Tauri API to perform native or heavy operations.
 
 ### UI
 

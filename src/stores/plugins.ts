@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api";
+import { batch } from "solid-js";
 import { createStore, produce } from "solid-js/store";
 
 export type Plugin = {
@@ -33,24 +34,25 @@ export function unregister(id: string) {
 }
 
 export async function updatePriorities(query: string) {
-	let i = 0;
-	for (const plugin of _plugins) {
-		const priority: number = await invoke("get_plugin_priority", {
-			id: plugin.id,
-			data: query,
-		});
-		console.log(plugin, priority);
+	await batch(async () => {
+		let i = 0;
+		for (const plugin of _plugins) {
+			const priority: number = await invoke("get_plugin_priority", {
+				id: plugin.id,
+				data: query,
+			});
 
+			setPlugins(
+				produce((plugins) => {
+					plugins[i].priority = priority;
+				})
+			);
+			i++;
+		}
 		setPlugins(
-			produce((plugins) => {
-				plugins[i].priority = priority;
-			})
+			produce((plugins) => plugins.sort((a, b) => a.priority - b.priority))
 		);
-		i++;
-	}
-	setPlugins(
-		produce((plugins) => plugins.sort((a, b) => a.priority - b.priority))
-	);
+	});
 }
 
 declare global {
