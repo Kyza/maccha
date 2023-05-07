@@ -11,25 +11,27 @@ import {
 	unregisterAll,
 } from "@tauri-apps/api/globalShortcut";
 
-if (await isRegistered("Alt+Space")) {
-	unregisterAll();
-}
-await register("Alt+Space", async () => {
-	const win = twindow.getCurrent();
-	if (await win.isVisible()) {
-		win.hide();
-	} else {
-		await win.show();
-		win.setFocus();
+(async () => {
+	if (await isRegistered("Alt+Space")) {
+		unregisterAll();
 	}
-});
-
-const isProduction = await invoke("is_production");
-if (isProduction) {
-	const win = twindow.getCurrent();
-	await win.onFocusChanged(({ payload: focused }) => {
-		if (!focused) win.hide();
+	await register("Alt+Space", async () => {
+		const win = twindow.getCurrent();
+		if (await win.isVisible()) {
+			win.hide();
+		} else {
+			await win.show();
+			win.setFocus();
+		}
 	});
-}
 
-render(() => <App />, document.getElementById("root") as HTMLElement);
+	const isProduction = await invoke("is_production");
+	if (isProduction) {
+		const win = twindow.getCurrent();
+		await win.onFocusChanged(({ payload: focused }) => {
+			if (!focused) win.hide();
+		});
+	}
+
+	render(() => <App />, document.getElementById("root") as HTMLElement);
+})();
