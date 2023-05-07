@@ -1,4 +1,4 @@
-# Maccha
+# ![](/src-tauri/icons/Square30x30Logo.png) Maccha
 
 I hate coffee.
 
